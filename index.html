@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measure Your Typing Speed</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+  }
+
+  .masterplan-container {
+    background-color: #ff9900;
+    padding: 20px;
+    border-radius: 10px;
+    width: 75%; /* 75% of the document width */
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease-in-out;
+  }
+
+  .input-box {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 75%; /* 75% of the document width */
+    max-width: 600px; /* Adjust this value if needed */
+    background-color: #f8f8f8;
+    animation: fadeInUp 1s ease-in-out;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+
+  button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  #timer {
+    font-size: 16px;
+    color: #007bff;
+    display: none;
+  }
+
+  .performance-card {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+    display: none;
+    animation: slideInRight 1s ease-in-out;
+  }
+
+  .performance-card.active {
+    animation: slideInRight 1s ease-in-out;
+  }
+
+  @keyframes slideInRight {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .performance-card h3 {
+    margin-top: 0;
+    font-size: 18px;
+  }
+
+  .performance-comment {
+    margin-top: 10px;
+    text-align: center;
+    opacity: 0;
+  }
+
+  .performance-comment.active {
+    animation: fadeInLeft 1s ease-in-out;
+    opacity: 1;
+  }
+
+  @keyframes fadeInLeft {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .good {
+    color: green;
+  }
+
+  .perfect {
+    color: #007bff;
+  }
+
+  .improving {
+    color: orange;
+  }
+
+  .practice-more {
+    color: red;
+  }
+</style>
+<script src="jquery.js"></script>
+</head>
+<body>
+    <div class="user-input">
+        <h2>Welcome to the Typing Test!</h2>
+        <form id="nameForm">
+          <label for="userName">Enter your name:</label>
+          <input type="text" id="userName" required>
+          <button type="submit">Start Test</button>
+        </form>
+      </div>
+      <div class="container" style="display: none;">
+        <!--<h2 id="userNameDisplay"></h2>-->
+        <div class="masterplan-container animate__animated animate__fadeInDown">
+          <h2 class="animate__animated animate__fadeInDown" id="myname"></h2>
+        </div>
+        <div class="input-box animate__animated animate__fadeInUp">
+          <input id="inputField" type="text" placeholder="Enter below words ..">
+          <button id="submitButton">Start Over</button>
+        </div>
+        <div class="container">
+          <p id="upperBoxText">Loading...</p>
+          <p id="timer"></p>
+        </div>
+        <div id="resultList"></div>
+        <div class="performance-card animate__animated" id="performanceCard" style="display: none;"></div>
+      </div>
+  <script>
+   $(document).ready(function() {
+    $('#nameForm').submit(function(event) {
+      event.preventDefault();
+
+      const userName = $('#userName').val().trim();
+      if (userName !== '') {
+        $('.user-input').hide();
+        $('.container').show();
+        $('#myname').text(`Welcome, ${userName}!`);
+        var sample = ["apple", "banana", "cherry", "dog", "elephant",
+  "flower", "grape", "honey", "igloo", "jungle",
+  "kangaroo", "lemon", "mango", "night", "ocean",
+  "parrot", "quartz", "rainbow", "sunset", "tiger",
+  "unicorn", "violet", "waterfall", "xylophone", "zebra",
+  "almond", "butterfly", "cactus", "dolphin", "eagle",
+  "flamingo", "giraffe", "hedgehog", "island", "jellyfish",
+  "kiwi", "lighthouse", "mountain", "ninja", "octopus",
+  "penguin", "quokka", "rainforest", "seagull", "toucan",
+  "umbrella", "volcano", "watermelon", "x-ray", "yoga",
+  "zeppelin", "actor", "ballerina", "chef", "detective",
+  "engineer", "firefighter", "guitarist", "hunter", "inventor",
+  "juggler", "knight", "lawyer", "mechanic", "nurse",
+  "optician", "pianist", "queen", "robot", "singer",
+  "teacher", "unicorn", "vampire", "waiter", "xylophonist",
+  "yacht", "zebra", "astronaut", "baker", "captain",
+  "doctor", "explorer", "farmer", "golfer", "hunter",
+  "inventor", "juggler", "king", "librarian", "mechanic",
+  "nurse", "opera", "pianist", "queen", "racecar", "sailor",
+  "teacher", "unicorn", "vampire", "waiter", "xylophone",
+  "yarn", "zebra", "architect", "biologist", "chef",
+  "detective", "engineer", "firefighter", "geologist", "historian",
+  "illustrator", "journalist", "knight", "lawyer", "magician",
+  "nurse", "oceanographer", "pilot", "queen", "racecar",
+  "scientist", "teacher", "unicorn", "violinist", "writer",
+  "xylophone", "yoga", "zebra", "athlete", "baker",
+  "chef", "detective", "engineer", "firefighter", "gardener",
+  "hunter", "inventor", "juggler", "king", "lawyer",
+  "mechanic", "nurse", "opera", "pianist", "queen",
+  "racecar", "scientist", "teacher", "unicorn", "violinist",
+  "writer", "xylophone", "yoga", "zebra","acorn", "butterfly", "cactus", "dandelion", "elephant",
+  "flamingo", "giraffe", "honeycomb", "island", "jellyfish",
+  "koala", "leopard", "mango", "nautical", "ocean",
+  "penguin", "quartz", "rainforest", "sailboat", "tiger",
+  "umbrella", "volcano", "waterfall", "xylophone", "yoga",
+  "zeppelin", "airplane", "balloon", "clown", "dolphin",
+  "eagle", "feather", "guitar", "helicopter", "iceberg",
+  "jaguar", "kite", "lighthouse", "mountain", "nebula",
+  "octopus", "palm", "quokka", "river", "sunset",
+  "tornado", "unicorn", "volcano", "waterfall", "x-ray",
+  "yacht", "zebra", "artist", "baker", "chef",
+  "dancer", "engineer", "farmer", "golfer", "hunter",
+  "inventor", "juggler", "king", "lawyer", "musician",
+  "nurse", "optician", "painter", "queen", "robot",
+  "scientist", "teacher", "unicorn", "vampire", "writer",
+  "xylophone", "yoga", "zeppelin", "adventure", "beach",
+  "campfire", "desert", "explore", "forest", "glacier",
+  "hiking", "island", "jungle", "kayak", "lakeside",
+  "mountain", "nature", "ocean", "paradise", "quicksand",
+  "rainbow", "sunrise", "trail", "underwater", "volcano",
+  "waterfall", "xenophile", "yellowstone", "zebra", "amazing",
+  "beautiful", "charming", "delightful", "enchanting", "fantastic",
+  "gorgeous", "hilarious", "incredible", "joyful", "lovely",
+  "magnificent", "nice", "outstanding", "peaceful", "quaint",
+  "radiant", "splendid", "terrific", "unique", "vivid",
+  "wonderful", "exciting", "youthful", "zealous"];
+        let currentIndex = 0;
+        let resultArray = [];
+        let startTime;
+        let timerInterval;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const words = selectedWords = shuffleArray(sample).slice(0, 20);
+
+        function updateUpperBox() {
+          $('#upperBoxText').text(words.slice(currentIndex, currentIndex + 5).join(' '));
+        }
+
+        function startTimer() {
+          startTime = Date.now();
+          timerInterval = setInterval(function() {
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            $('#timer').text(elapsedTime.toFixed(3) + ' seconds');
+          }, 10);
+          $('#timer').show();
+        }
+
+        function stopTimer() {
+          clearInterval(timerInterval);
+          $('#timer').hide();
+        }
+
+        function displayPerformanceCard(data) {
+          const cardContent = `
+            <h2 style="padding-left: 15px;">Your Performance</h2>
+            <p><strong>Start Time:</strong> ${data.startTime}</p>
+            <p><strong>End Time:</strong> ${data.endTime}</p>
+            <p><strong>Elapsed Time:</strong> ${data.elapsedTime} seconds</p>
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Accuracy:</strong> ${data.accuracy}%</p>
+            <p><strong>WPM:</strong> ${data.wpm} words/min</p>
+            <p><strong>Correct Words:</strong> ${data.correctWords}</p>
+            <p><strong>Incorrect Words:</strong> ${data.incorrectWords}</p>
+          `;
+          $('#performanceCard').html(cardContent).show().addClass('animate__slideInRight');
+        }
+
+        function displayPerformanceComment(accuracy) {
+          let comment = '';
+          let commentClass = '';
+
+          if (accuracy >= 90) {
+            comment = 'Good';
+            commentClass = 'good';
+          } else if (accuracy >= 80) {
+            comment = 'Perfect';
+            commentClass = 'perfect';
+          } else if (accuracy >= 70) {
+            comment = 'Improving';
+            commentClass = 'improving';
+          } else {
+            comment = 'Practice more';
+            commentClass = 'practice-more';
+          }
+
+          const commentContent = `<div class="performance-comment ${commentClass} animate__animated animate__fadeInLeft">${comment}</div>`;
+          $('#resultList').append(commentContent);
+        }
+
+    $('#inputField').on('input', function() {
+        if (currentIndex === 0) {
+          startTimer();
+        }
+      });
+        $('#inputField').on('keyup', function(event) {
+          if (event.key === ' ' && currentIndex < words.length) {
+            const inputValue = $(this).val().trim();
+            if (inputValue === words[currentIndex]) {
+              resultArray.push('1');
+            } else {
+              resultArray.push('0');
+            }
+
+            currentIndex++;
+            $(this).val('');
+
+            if (currentIndex < words.length) {
+              updateUpperBox();
+            } else {
+              stopTimer();
+              $('#upperBoxText').text('');
+              const endTime = Date.now();
+              const elapsedTime = (endTime - startTime) / 1000;
+              const wpm = (resultArray.length / (elapsedTime / 60)).toFixed(2);
+
+              const data = {
+                startTime: new Date(startTime).toLocaleString(),
+                endTime: new Date(endTime).toLocaleString(),
+                elapsedTime: elapsedTime.toFixed(3),
+                name: userName,
+                accuracy: (resultArray.filter(value => value === '1').length / resultArray.length * 100).toFixed(2),
+                wpm: wpm,
+                correctWords: resultArray.filter(value => value === '1').length,
+                incorrectWords: resultArray.filter(value => value === '0').length
+              };
+
+              displayPerformanceCard(data);
+              displayPerformanceComment(data.accuracy);
+            }
+          }
+        });
+
+        $('#submitButton').on('click', function() {
+          currentIndex = 0;
+          resultArray = [];
+          $('#inputField').val('');
+          stopTimer();
+          $('#timer').text('Hardness: easy');
+          $('#resultList').empty();
+          $('#performanceCard').empty().removeClass('active');
+          $('.performance-comment').removeClass('active');
+          updateUpperBox();
+        });
+
+        updateUpperBox();
+      }
+    });
+  });
+</script>
+</body>
+</html>
