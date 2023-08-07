@@ -265,14 +265,14 @@
         function displayPerformanceCard(data) {
           const cardContent = `
             <h2 style="padding-left: 15px;">Your Performance</h2>
-            <p><strong>Start Time:</strong> ${data.startTime}</p>
-            <p><strong>End Time:</strong> ${data.endTime}</p>
-            <p><strong>Elapsed Time:</strong> ${data.elapsedTime} seconds</p>
             <p><strong>Name:</strong> ${data.name}</p>
-            <p><strong>Accuracy:</strong> ${data.accuracy}%</p>
             <p><strong>WPM:</strong> ${data.wpm} words/min</p>
+            <p><strong>Accuracy:</strong> ${data.accuracy}%</p>
             <p><strong>Correct Words:</strong> ${data.correctWords}</p>
             <p><strong>Incorrect Words:</strong> ${data.incorrectWords}</p>
+            <p><strong>Elapsed Time:</strong> ${data.elapsedTime} seconds</p>
+            <p><strong>Start Time:</strong> ${data.startTime}</p>
+            <p><strong>End Time:</strong> ${data.endTime}</p>
           `;
           $('#performanceCard').html(cardContent).show().addClass('animate__slideInRight');
         }
@@ -356,6 +356,11 @@
 
         updateUpperBox();
       }
+
+    /*
+      Author: Masterplan,
+      Date: August 8, 2023 02:41
+    */
     });
   });
 </script>
