@@ -242,7 +242,7 @@
             return array;
         }
 
-        const words = selectedWords = shuffleArray(sample).slice(0, 20);
+        const words = shuffleArray(sample).slice(0, 20);
 
         function updateUpperBox() {
           $('#upperBoxText').text(words.slice(currentIndex, currentIndex + 5).join(' '));
