@@ -309,43 +309,47 @@
           startTimer();
         }
       });
-        $('#inputField').on('keyup', function(event) {
-          if (event.key === ' ' && currentIndex < words.length) {
-            const inputValue = $(this).val().trim();
-            if (inputValue === words[currentIndex]) {
-              resultArray.push('1');
-            } else {
-              resultArray.push('0');
-            }
+      $('#inputField').on('input', function(event) {
+  const inputValue = $(this).val().trim();
 
-            currentIndex++;
-            $(this).val('');
+  if (inputValue && currentIndex < words.length) {
+    if (event.data === ' ' || event.inputType === 'insertText') {
+      if (inputValue === words[currentIndex]) {
+        resultArray.push('1');
+      } else {
+        resultArray.push('0');
+      }
 
-            if (currentIndex < words.length) {
-              updateUpperBox();
-            } else {
-              stopTimer();
-              $('#upperBoxText').text('');
-              const endTime = Date.now();
-              const elapsedTime = (endTime - startTime) / 1000;
-              const wpm = (resultArray.length / (elapsedTime / 60)).toFixed(2);
+      currentIndex++;
+      $(this).val('');
 
-              const data = {
-                startTime: new Date(startTime).toLocaleString(),
-                endTime: new Date(endTime).toLocaleString(),
-                elapsedTime: elapsedTime.toFixed(3),
-                name: userName,
-                accuracy: (resultArray.filter(value => value === '1').length / resultArray.length * 100).toFixed(2),
-                wpm: wpm,
-                correctWords: resultArray.filter(value => value === '1').length,
-                incorrectWords: resultArray.filter(value => value === '0').length
-              };
+      if (currentIndex < words.length) {
+        updateUpperBox();
+      } else {
+        stopTimer();
+        $('#upperBoxText').text('');
+        const endTime = Date.now();
+        const elapsedTime = (endTime - startTime) / 1000;
+        const wpm = (resultArray.length / (elapsedTime / 60)).toFixed(2);
 
-              displayPerformanceCard(data);
-              displayPerformanceComment(data.accuracy);
-            }
-          }
-        });
+        const data = {
+          startTime: new Date(startTime).toLocaleString(),
+          endTime: new Date(endTime).toLocaleString(),
+          elapsedTime: elapsedTime.toFixed(3),
+          name: userName,
+          accuracy: (resultArray.filter(value => value === '1').length / resultArray.length * 100).toFixed(2),
+          wpm: wpm,
+          correctWords: resultArray.filter(value => value === '1').length,
+          incorrectWords: resultArray.filter(value => value === '0').length
+        };
+
+        displayPerformanceCard(data);
+        displayPerformanceComment(data.accuracy);
+      }
+    }
+  }
+});
+
 
         $('#submitButton').on('click', function() {
           currentIndex = 0;
