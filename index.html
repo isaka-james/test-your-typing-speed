@@ -309,7 +309,7 @@
           startTimer();
         }
       });
-        $('#inputField').on('keyup', function(event) {
+      $('#inputField').on('keyup', function(event) {
           if (event.key === ' ' && currentIndex < words.length) {
             const inputValue = $(this).val().trim();
             if (inputValue === words[currentIndex]) {
