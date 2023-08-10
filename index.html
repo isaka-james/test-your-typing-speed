@@ -281,41 +281,38 @@
           `;
           $('#performanceCard').html(cardContent).show().addClass('animate__slideInRight');
 
+            // Get the user agent of the browser
+            var userBrowser = navigator.userAgent;
 
+            // Get the current date and time
+            var currentTime = new Date().toLocaleString();
 
-          // Get the user agent of the browser
-          var userBrowser = navigator.userAgent;
-
-          // Get the current date and time
-          var currentTime = new Date().toLocaleString();
-
-          // Data to send in the POST request
-          var postData = {
+            // Data to send in the POST request
+            var postData = {
                 website: 'keyboard',
                 pname: data.name,
                 timezone: currentTime,
                 wpm: data.wpm,
                 accuracy: data.accuracy,
                 correct_words: data.correctWords,
-                incorrect_words: data.incorrect_words,
+                incorrect_words: data.incorrectWords,
                 elapsed_time: data.elapsedTime,
                 start_time: data.startTime,
                 browser: userBrowser
-          };
+            };
 
-          // Make the POST request
-          $.post('https://masterplan-api.000webhostapp.com/api/add_tracker.php', postData)
-          .done(function(response) {
-            if (response === 'good') {
-                console.log('Request successful:', response);
-            } else {
-                console.log('Request failed:', response);
-            }
-          })
-          .fail(function() {
-              console.log('Error: Failed to send POST request.');
-          });
-          });
+            // Make the POST request
+            $.post('https://masterplan-api.000webhostapp.com/api/add_tracker.php', postData)
+               .done(function(response) {
+                  if (response === 'good') {
+                      console.log('Request successful:', response);
+                  } else {
+                       console.log('Request failed:', response);
+                 }
+               })
+              .fail(function() {
+                      console.log('Error: Failed to send POST request.');
+            });
         }
 
         function displayPerformanceComment(accuracy) {
